@@ -69,6 +69,16 @@ send(Controller, To, From, Subject, Message, Options) ->
 %% @doc Sends an email and returns ok or error depending on the outcome
 -spec send(pid(),maybedirtyemail(), maybedirtyemail(), binary(), message(), options(), any()) ->
             {ok, term()} | {error, term()}.
+send(Controller, To, From, {raw, Subject}, Message, Options, Params) ->
+    gen_server:call( Controller, { send
+                                      , sanitize_param(To)
+                                      , sanitize_param(From)
+                                      , {raw, Subject}
+                                      , sanitize_message(Message)
+                                      , Options
+                                      , Params}
+                   , ?TIMEOUT)
+;
 send(Controller, To, From, Subject, Message, Options, Params) ->
     gen_server:call( Controller, { send
                                       , sanitize_param(To)

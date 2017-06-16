@@ -92,6 +92,9 @@ construct_request(Conn, Subject,Body) ->
     , "application/x-www-form-urlencoded"
     , add_subject(url_encode(Body), Subject) }.
 
+add_subject(Body, {raw, Subject}) ->
+  <<Body/binary, <<"&subject=">>/binary, Subject/binary>>
+;
 add_subject(Body, Subject) ->
   <<Body/binary, <<"&subject=">>/binary,
     <<"=?utf-8?B?">>/binary, (base64:encode(Subject))/binary, <<"?=">>/binary >>.
